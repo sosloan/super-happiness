@@ -312,7 +312,7 @@ export function buildFeed() {
     description: "Keywords, definitions, and relations generated from the Ada thoughts package.",
     source: {
       module: "AdaThoughts",
-      ruby: "ada_thoughts.rb",
+      javascript: "src/ada-thoughts.js",
       prose: "ada-reserved-words.txt",
       companion_index: "writeups/ada-reserved-words.json",
     },
@@ -344,6 +344,11 @@ export function selfCheck() {
   }
   if (THOUGHT_KINDS.some((kind) => !THOUGHTS.some((thought) => thought.kind === kind))) {
     throw new Error("thought kinds incomplete");
+  }
+  for (const { word, passage } of KEYWORDS) {
+    if (!["at", "for", "of", "is", "in", "or"].includes(word) && !wordInText(passage, word)) {
+      throw new Error(`passage for ${word} lacks the word`);
+    }
   }
   if (selectMethod("add", 2, 3) !== 5 || selectMethod("rem", 11, 4) !== 3
     || selectMethod("mod", -11, 4) !== 1) {

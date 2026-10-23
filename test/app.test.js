@@ -27,6 +27,9 @@ test("looks up thoughts and keywords with explicit not-found responses", async (
   assert.equal((await app.request("/thoughts/nope")).status, 400);
   assert.equal((await app.request("/thoughts/3")).status, 404);
   assert.equal((await app.request("/keywords/record")).status, 200);
+  assert.equal((await app.request("/keywords/index/72")).status, 200);
+  assert.equal((await (await app.request("/keywords/index/72")).json()).word, "xor");
+  assert.equal((await app.request("/keywords/index/73")).status, 404);
   assert.equal((await app.request("/keywords/unknown")).status, 404);
 });
 
@@ -41,7 +44,9 @@ test("feed includes matching keyword, definition, thought, and relation counts",
   assert.equal(feed.definitions.length, feed.counts.definitions);
   assert.ok(feed.relations.length > 0);
   assert.ok(feed.thought_links.length > 0);
-  assert.equal(feed.relations.find((relation) => relation.source === "record" && relation.target === "return"), undefined);
+  assert.ok(feed.relations.some(({ source, target, kinds }) => (
+    source === "package" && target === "private" && kinds.includes("doctrine")
+  )));
 });
 
 test("creates typed thoughts and rejects null values", async () => {

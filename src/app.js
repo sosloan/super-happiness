@@ -5,6 +5,7 @@ import {
   buildFeed,
   KEYWORDS,
   keyword,
+  keywordAt,
   reverseSequence,
   selectMethod,
   THOUGHTS,
@@ -33,6 +34,18 @@ app.get("/thoughts/:index", (c) => {
 });
 
 app.get("/keywords", (c) => c.json(KEYWORDS));
+
+app.get("/keywords/index/:index", (c) => {
+  const indexText = c.req.param("index");
+  if (!/^(0|[1-9]\d*)$/.test(indexText)) {
+    return c.json({ error: "keyword index must be a non-negative integer" }, 400);
+  }
+  try {
+    return c.json(keywordAt(Number(indexText)));
+  } catch {
+    return c.json({ error: "keyword not found" }, 404);
+  }
+});
 
 app.get("/keywords/:word", (c) => {
   try {

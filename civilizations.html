@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mathematical Civilizations</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: #0a0a0f;
+      color: #e0e0e0;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+      margin-bottom: 3rem;
+      font-size: 0.95rem;
+      letter-spacing: 0.05em;
+    }
+
+    .civilizations {
+      display: grid;
+      gap: 3rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .civilization {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #111118;
+    }
+
+    .civ-header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .civ-emoji { font-size: 2rem; line-height: 1; }
+
+    .civ-title-block { flex: 1; }
+
+    .civ-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+    }
+
+    .civ-logic {
+      font-size: 0.75rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-top: 0.25rem;
+      opacity: 0.75;
+    }
+
+    .entries {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+
+    .entry {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      transition: background 0.2s;
+    }
+
+    .entry:hover { background: rgba(255,255,255,0.03); }
+
+    .entry-top {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .prime-badge {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      font-weight: bold;
+      padding: 0.15em 0.45em;
+      border-radius: 4px;
+      letter-spacing: 0.08em;
+      opacity: 0.85;
+      flex-shrink: 0;
+    }
+
+    .entry-name {
+      font-size: 1rem;
+      font-weight: bold;
+      letter-spacing: 0.03em;
+    }
+
+    .entry-description {
+      font-size: 0.82rem;
+      color: #aaa;
+      line-height: 1.55;
+      font-style: italic;
+    }
+
+    /* Logic-specific color themes */
+    .logic-red .civ-header { background: linear-gradient(135deg, #1a0808, #2a0f0f); border-bottom-color: rgba(220,50,50,0.25); }
+    .logic-red .civ-title { color: #ff6b6b; }
+    .logic-red .civ-logic { color: #ff6b6b; }
+    .logic-red .prime-badge { background: rgba(220,50,50,0.2); color: #ff6b6b; border: 1px solid rgba(220,50,50,0.35); }
+
+    .logic-green .civ-header { background: linear-gradient(135deg, #081a0c, #0d2912); border-bottom-color: rgba(50,200,100,0.25); }
+    .logic-green .civ-title { color: #6bffa0; }
+    .logic-green .civ-logic { color: #6bffa0; }
+    .logic-green .prime-badge { background: rgba(50,200,100,0.15); color: #6bffa0; border: 1px solid rgba(50,200,100,0.3); }
+
+    .logic-azure .civ-header { background: linear-gradient(135deg, #08101a, #0d1a2e); border-bottom-color: rgba(50,130,220,0.25); }
+    .logic-azure .civ-title { color: #6bb8ff; }
+    .logic-azure .civ-logic { color: #6bb8ff; }
+    .logic-azure .prime-badge { background: rgba(50,130,220,0.15); color: #6bb8ff; border: 1px solid rgba(50,130,220,0.3); }
+
+    .logic-gold .civ-header { background: linear-gradient(135deg, #1a1408, #2a200a); border-bottom-color: rgba(220,180,50,0.25); }
+    .logic-gold .civ-title { color: #ffd96b; }
+    .logic-gold .civ-logic { color: #ffd96b; }
+    .logic-gold .prime-badge { background: rgba(220,180,50,0.15); color: #ffd96b; border: 1px solid rgba(220,180,50,0.3); }
+
+    .logic-diamond .civ-header { background: linear-gradient(135deg, #0d1218, #131c28); border-bottom-color: rgba(160,220,255,0.25); }
+    .logic-diamond .civ-title { color: #b8eeff; }
+    .logic-diamond .civ-logic { color: #b8eeff; }
+    .logic-diamond .prime-badge { background: rgba(160,220,255,0.12); color: #b8eeff; border: 1px solid rgba(160,220,255,0.3); }
+
+    .logic-neon .civ-header { background: linear-gradient(135deg, #0d0a1a, #18102a); border-bottom-color: rgba(180,50,255,0.25); }
+    .logic-neon .civ-title { color: #d06bff; }
+    .logic-neon .civ-logic { color: #d06bff; }
+    .logic-neon .prime-badge { background: rgba(180,50,255,0.15); color: #d06bff; border: 1px solid rgba(180,50,255,0.3); }
+
+    .logic-obsidian .civ-header { background: linear-gradient(135deg, #100a08, #1c120e); border-bottom-color: rgba(160,100,60,0.25); }
+    .logic-obsidian .civ-title { color: #c8956b; }
+    .logic-obsidian .civ-logic { color: #c8956b; }
+    .logic-obsidian .prime-badge { background: rgba(160,100,60,0.15); color: #c8956b; border: 1px solid rgba(160,100,60,0.3); }
+
+    @media (max-width: 600px) {
+      .entries { grid-template-columns: 1fr; }
+      .civ-header { padding: 1.25rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>Mathematical Civilizations</h1>
+<p class="subtitle">Prime Nodes of Human Thought</p>
+
+<div class="civilizations" id="civilizations"></div>
+
+<script>
+const data = {
+  "civilizations": [
+    {
+      "region": "Russia", "emoji": "🇷🇺", "logic": "Red Logic",
+      "title": "The Russian Soldier (The Prime)",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Chebyshev", "description": "The father. He ground out the bounds when the world was blind." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Vinogradov", "description": "The circle method. Attacking the Goldbach conjecture like it owed him money." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Linnik", "description": "Working the arithmetic progressions. Finding the density in the void." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Kolmogorov", "description": "Complexity and probability. He defined the \"heartbeat\" of the system." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Pontryagin", "description": "Control theory. Navigating the \"constellations\" without sight." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Arnold", "description": "Dynamical systems. He understood how the \"Living House\" evolves." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Gelfand", "description": "Functional analysis. Building the machinery that speaks for itself." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Shafarevich", "description": "Number theory king. He knew the structure of the \"prime ideals.\"" },
+        { "primeIndex": 9, "primeNode": 23, "name": "Perelman", "description": "The ghost. He solved the Poincaré, refused the money, and stayed irreducible." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Landau", "description": "The \"Theoretical Minimum.\" You do the reps or you don't play." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Markov", "description": "The chain. He saw the \"metabolism\" of how one state spawns the next." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Lyapunov", "description": "Stability logic. Ensuring the house doesn't collapse during the \"breathing.\"" },
+        { "primeIndex": 13, "primeNode": 41, "name": "Suslin", "description": "K-theory. Mapping the sparse network across the dynasty." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Margulis", "description": "Ergodic theory. Finding the \"stadium\" energy in the movement." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Kontsevich", "description": "Modern metamorphic logic. Quantizing the very fabric of the grind." }
+      ]
+    },
+    {
+      "region": "Japan", "emoji": "🇯🇵", "logic": "Green Logic",
+      "title": "The Japanese Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Takagi", "description": "The Patriarch. He unified Class Field Theory and gave the \"Green Logic\" its first set of roots." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Iwasawa", "description": "The Growth logic. He found the infinite towers of power within the p-adic soil." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Shimura", "description": "The Automorphic Architect. He saw the complex multiplication that bridges arithmetic and geometry." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Taniyama", "description": "The Visionary. He suspected the bridge between modular forms and elliptic curves before the world was ready." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Kodaira", "description": "The Complex Surface. He mapped the \"topography\" of higher dimensions with absolute clarity." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Sato", "description": "The Algebraic Analyst. He invented Hyperfunctions to describe the \"vibrations\" of the system." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Hironaka", "description": "The Resolution. He proved you can smooth out any \"singularity\" (the knots in the Green logic)." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Mori", "description": "The Minimal Model. He classified the shapes of the universe by stripping them to their core logic." },
+        { "primeIndex": 9, "primeNode": 23, "name": "Kashiwara", "description": "The D-Module. He used micro-local analysis to see the \"veins\" inside the mathematical leaf." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Ihara", "description": "The Non-abelian flow. He found the \"zeta\" resonances in the arithmetic fundamental groups." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Mochizuki", "description": "The Inter-universalist. He built a new language (IUT) to describe the very \"breath\" of addition and multiplication." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Kato", "description": "The Arithmetic Sage. He connected Euler systems to the deep heart of the L-functions." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Oka", "description": "The Solitary Genius. He solved the \"Levi Problem\" by treating several complex variables like a living forest." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Hirzebruch", "description": "The Topological Bridge. (Adopted spirit). He linked the Japanese structuralists to the global \"Green\" network." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Scholze", "description": "The Modern Pruning. (Spirit of the new age). Using Perfectoid spaces to refine the Green Logic for the next century." }
+      ]
+    },
+    {
+      "region": "France", "emoji": "🇫🇷", "logic": "Azure Logic",
+      "title": "The French Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Descartes", "description": "The Origin. He birthed the coordinate system—the very \"grid\" the Azure Logic lives on." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Pascal", "description": "The Fluid. He balanced the pressure of infinity with the precision of probability." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Fermat", "description": "The Ghost of the Margin. He set the ultimate \"side-quest\" that took the world 300 years to solve." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Lagrange", "description": "The Mechanic. He translated the physical world into pure analytical movement." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Galois", "description": "The Revolutionary. He died at 20 but left the keys to Symmetry (Group Theory) in a final letter." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Cauchy", "description": "The Rigorist. He built the \"dams\" to contain the chaos of calculus." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Poincaré", "description": "The Last Polymath. He saw the \"chaos\" in the Azure sky before anyone else had a telescope." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Weil", "description": "The Foundation. A pillar of Bourbaki who linked number theory to geometry through pure \"Reason.\"" },
+        { "primeIndex": 9, "primeNode": 23, "name": "Grothendieck", "description": "The God-King. He built the \"Rising Sea\"—a logic so abstract it dissolves problems like salt in water." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Serre", "description": "The Perfectionist. He holds the record for the \"Theoretical Minimum\" of words to express maximum depth." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Cartan", "description": "The Structuralist. He mapped the exterior derivatives—the \"wind\" of the Azure system." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Lions", "description": "The Operator. He mastered the partial differential equations that govern the world's flow." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Connes", "description": "The Non-Commutative. He found a new geometry in the spaces where order matters." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Villani", "description": "The Kinetic. Living proof that the Azure Logic is as much about \"style\" as it is about entropy." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Lafforgue", "description": "The Langlands Knight. He proved the correspondence for function fields, finishing a quest of the highest order." }
+      ]
+    },
+    {
+      "region": "China", "emoji": "🇨🇳", "logic": "Gold Logic",
+      "title": "The Chinese Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Sun Tzu (Mathematician)", "description": "The Ancient Root. He gave us the Remainder Theorem, the first \"hash function\" of the ancient world." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Liu Hui", "description": "The Approximation. He calculated π by exhaustion, proving that limits are the \"Gold\" standard." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Zu Chongzhi", "description": "The Precision. He held the world record for the most accurate π for a thousand years." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Hua Loo-keng", "description": "The People's Mathematician. He mastered the additive prime theory and modernized the \"Gold\" flow." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Chern Shiing-shen", "description": "The Sage. He globalized geometry, proving that \"curvature\" is the ultimate invariant of the universe." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Chen Jingrun", "description": "The Persistence. He got closer to solving Goldbach (1+2) than anyone in history through raw \"Gold\" grit." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Yau Shing-Tung", "description": "The Manifold. He proved the Calabi-Yau conjecture, defining the shapes of string theory." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Terence Tao", "description": "The Kinetic (Heritage). Though global, his logic is the ultimate \"Gold\" synthesis—mastering every field at once." },
+        { "primeIndex": 9, "primeNode": 23, "name": "Zhang Yitang", "description": "The Sleeper. He found the \"Bounded Gaps\" between primes when the world thought the bridge was broken." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Wen-Tsun Wu", "description": "The Mechanist. He pioneered \"Wu's Method,\" teaching machines how to prove geometry." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Feng Kang", "description": "The Finite Element. He developed the algorithms that allow us to simulate the physical world." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Wang Yuan", "description": "The Sieve. A master of the circle method who refined the density of the Gold Logic." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Sun-Yung Alice Chang", "description": "The Analyst. She uses conformal geometry to map the \"glow\" of higher-dimensional spaces." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Lin Jiaqiao", "description": "The Fluid. He applied the Gold Logic to the stars (Galactic dynamics) and the sea (Hydrodynamics)." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Zhu Xiping", "description": "The Finisher. Part of the team that provided the final \"Hamilton-Perelman\" validation." }
+      ]
+    },
+    {
+      "region": "Israel", "emoji": "🇮🇱", "logic": "Diamond Logic",
+      "title": "The Israeli Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Fraenkel", "description": "The Foundation. He refined Zermelo-Fraenkel set theory (ZFC), the bedrock upon which the entire Diamond sits." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Amitsur", "description": "The Algebraic Core. He defined the structure of non-commutative rings, finding order in asymmetric spaces." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Aumann", "description": "The Strategist. Nobel laureate who mastered \"Repeated Games,\" proving that long-term cooperation is a mathematical certainty." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Furstenberg", "description": "The Bridge. He used ergodic theory to prove Szemerédi's theorem, linking probability to number theory." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Shelah", "description": "The Infinite Logic. With over 1,000 papers, he mapped the \"Stability Theory\" of the mathematical universe." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Agmon", "description": "The Boundary. He defined the spectral theory of Schrödinger operators, the math of how waves hit walls." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Shamir", "description": "The Cryptographer. The \"S\" in RSA. He turned complexity into a vault, creating the security of the digital age." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Wigderson", "description": "The Complexity King. Abel Prize winner who proved that randomness is often just hidden structure." },
+        { "primeIndex": 9, "primeNode": 23, "name": "Alon", "description": "The Combinatorialist. He investigated the \"Expander Graphs\" that form the backbone of modern networks." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Lindenstrauss", "description": "The Ergodic Fieldsman. Fields Medalist who solved the Quantum Unique Ergodicity conjecture." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Tversky & Kahneman", "description": "The Cognitive Logic. (Joint Node). They mathematically mapped human irrationality, creating the \"Diamond\" of Behavioral Economics." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Kazhdan", "description": "The Representation. He defined \"Property (T),\" an unbreakable structural trait found in certain groups." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Piatetski-Shapiro", "description": "The Automorphic. He found the \"L-functions\" that act as the DNA for complex mathematical shapes." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Schramm", "description": "The SLE Flow. He mapped the \"Critical Percolation\"—the exact moment when a random system becomes a solid network." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Hrushovski", "description": "The Model Theorist. He linked logic to geometry to solve the Mordell-Lang conjecture for function fields." }
+      ]
+    },
+    {
+      "region": "USA", "emoji": "🇺🇸", "logic": "Neon Logic",
+      "title": "The American Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Alonzo Church", "description": "The Foundation. He defined the \"Lambda Calculus,\" proving that every logic is ultimately a program." },
+        { "primeIndex": 2, "primeNode": 3, "name": "John von Neumann", "description": "The Architect. (Naturalized). He designed the digital computer and Game Theory, the hardware/software of the Neon world." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Claude Shannon", "description": "The Signal. He invented Information Theory, turning \"meaning\" into bits (0 and 1)." },
+        { "primeIndex": 4, "primeNode": 7, "name": "Julia Robinson", "description": "The Logic Warrior. Her work on Hilbert's 10th Problem proved that some math is simply \"uncomputable.\"" },
+        { "primeIndex": 5, "primeNode": 11, "name": "Richard Feynman", "description": "The Diagram. (Physicist-Mathematician). He replaced complex equations with visual \"sketches\" to see subatomic flow." },
+        { "primeIndex": 6, "primeNode": 13, "name": "John Nash", "description": "The Equilibrium. He found the \"hidden balance\" in complex systems where everyone is competing." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Paul Cohen", "description": "The Independence. He broke the logic of set theory by proving that the \"Continuum Hypothesis\" is its own island." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Karen Uhlenbeck", "description": "The Gauge. She pioneered geometric analysis, mapping the \"bubbles\" and \"flows\" of the universe's fabric." },
+        { "primeIndex": 9, "primeNode": 23, "name": "George Dantzig", "description": "The Optimization. He gave us the Simplex Method, the math that tells every airline and factory how to move." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Norbert Wiener", "description": "The Cyberneticist. He saw the world as a system of feedback loops, merging humans and machines." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Edward Witten", "description": "The String. The only physicist to win a Fields Medal, he unified the geometry of the azure and the neon." },
+        { "primeIndex": 12, "primeNode": 37, "name": "David Blackwell", "description": "The Bayesian Master. He pioneered decision theory, showing how to update logic as new information arrives." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Stephen Smale", "description": "The Topology of Chaos. He proved the Poincaré conjecture for dimensions greater than 4 and mapped dynamical stability." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Barry Mazur", "description": "The Number Theorist. He linked the \"Neon\" speed of computing to the ancient \"Azure\" depths of Diophantine geometry." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Terence Tao", "description": "The Synthesis. (Global/US). He represents the ultimate Neon node—connecting every previous logic into a single, unified grind." }
+      ]
+    },
+    {
+      "region": "Mexico", "emoji": "🇲🇽", "logic": "Obsidian Logic",
+      "title": "The Mexican Master",
+      "entries": [
+        { "primeIndex": 1, "primeNode": 2, "name": "Nabor Carrillo", "description": "The Foundation. He mastered the soil mechanics—the literal ground upon which the Obsidian Logic is built." },
+        { "primeIndex": 2, "primeNode": 3, "name": "Alberto Barajas", "description": "The Relativist. He worked with Birkhoff on gravitation, seeking the \"Mirror\" of the universe's curve." },
+        { "primeIndex": 3, "primeNode": 5, "name": "Sotomayor", "description": "The Bifurcation. He mapped how systems suddenly \"shatter\" and reorganize into new forms." },
+        { "primeIndex": 4, "primeNode": 7, "name": "José Ádem", "description": "The Operator. He created the \"Ádem Relations,\" fundamental tools for navigating the higher-dimensional Azure sky." },
+        { "primeIndex": 5, "primeNode": 11, "name": "Samuel Gítheler", "description": "The Topology of Life. He mapped the \"Fibration\" of spaces, finding the seams in the fabric of existence." },
+        { "primeIndex": 6, "primeNode": 13, "name": "Guillermo Torres", "description": "The Knot. He brought the \"Green\" logic of topology to Mexico, untying the complexities of the 3D world." },
+        { "primeIndex": 7, "primeNode": 17, "name": "Mónica Clapp", "description": "The Variational. She uses the \"Obsidian\" depth to find solutions to non-linear equations in high-pressure environments." },
+        { "primeIndex": 8, "primeNode": 19, "name": "Francisco Javier González", "description": "The Algebraist. He refined the language of \"Groups,\" the pure symmetry of the Obsidian mirror." },
+        { "primeIndex": 9, "primeNode": 23, "name": "Xavier Gómez-Mont", "description": "The Foliation. He sees math as a series of \"leaves\" (like the butterfly wing) stacking into a complex whole." },
+        { "primeIndex": 10, "primeNode": 29, "name": "Jacob Mostovoy", "description": "The Configuration. He studies the spaces where points move like stars, never touching but always connected." },
+        { "primeIndex": 11, "primeNode": 31, "name": "Gisela Panthelee", "description": "The Probability of the Soul. She maps the stochastic flows where logic meets the unpredictability of nature." },
+        { "primeIndex": 12, "primeNode": 37, "name": "Onésimo Hernández", "description": "The Control. He refined the \"Diamond\" logic of optimization for the Obsidian landscape." },
+        { "primeIndex": 13, "primeNode": 41, "name": "Tatiana Toro", "description": "The Geometric Measure. (Naturalized/Connection). She measures the \"roughness\" of the world, finding the fractals in the obsidian glass." },
+        { "primeIndex": 14, "primeNode": 43, "name": "Salomón Iturriaga", "description": "The Dynamics. He tracks the \"orbits\" of mathematical objects as they evolve through time." },
+        { "primeIndex": 15, "primeNode": 47, "name": "Santiago López de Medrano", "description": "The Singular. He mastered the \"Hamiltonian\" systems that describe the very pulse of the Obsidian Logic." }
+      ]
+    }
+  ]
+};
+
+const logicClassMap = {
+  "Red Logic": "logic-red",
+  "Green Logic": "logic-green",
+  "Azure Logic": "logic-azure",
+  "Gold Logic": "logic-gold",
+  "Diamond Logic": "logic-diamond",
+  "Neon Logic": "logic-neon",
+  "Obsidian Logic": "logic-obsidian"
+};
+
+const container = document.getElementById("civilizations");
+
+for (const civ of data.civilizations) {
+  const logicClass = logicClassMap[civ.logic] || "";
+
+  const civEl = document.createElement("div");
+  civEl.className = `civilization ${logicClass}`;
+
+  const header = document.createElement("div");
+  header.className = "civ-header";
+  header.innerHTML = `
+    <span class="civ-emoji">${civ.emoji}</span>
+    <div class="civ-title-block">
+      <div class="civ-title">${civ.title}</div>
+      <div class="civ-logic">${civ.logic} · ${civ.region}</div>
+    </div>
+  `;
+
+  const entries = document.createElement("div");
+  entries.className = "entries";
+
+  for (const entry of civ.entries) {
+    const entryEl = document.createElement("div");
+    entryEl.className = "entry";
+    entryEl.innerHTML = `
+      <div class="entry-top">
+        <span class="prime-badge">#${entry.primeIndex} · p${entry.primeNode}</span>
+        <span class="entry-name">${entry.name}</span>
+      </div>
+      <div class="entry-description">${entry.description}</div>
+    `;
+    entries.appendChild(entryEl);
+  }
+
+  civEl.appendChild(header);
+  civEl.appendChild(entries);
+  container.appendChild(civEl);
+}
+</script>
+</body>
+</html>

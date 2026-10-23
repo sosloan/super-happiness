@@ -1,0 +1,16 @@
+{
+  "name": "ada-thoughts-hono",
+  "version": "1.0.0",
+  "description": "Hono API for Ada Lovelace-inspired typed thoughts",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "node --test",
+    "start": "node src/server.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "hono": "^4.13.13"
+  },
+  "private": true
+}
